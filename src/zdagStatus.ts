@@ -1,21 +1,26 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
-import { ZmqSocketService } from './ZmqSocket.service';
-import { SysTxAssetAllocationSend, TransactionListEntry } from '@syscoin/syscoin-js';
-import { PendingZdagTx } from './index';
+import { Observable, Subject, Subscription } from 'rxjs';
+import { ZMQSocket } from './zmqSocket';
+import { SysTxAssetAllocationSend, TransactionListEntry, SyscoinRpcClient, rpcServices } from '@syscoin/syscoin-js';
+import { PendingZdagTx, ZdagConstructorProps } from './index';
 
-
-@Injectable()
-export class ZdagStatusService implements OnDestroy {
+export class Zdag {
   private pendingTxs: Map<string, PendingZdagTx> = new Map<string, PendingZdagTx>();
   private subscriptions: Array<Subscription> = [];
   private updateZdagInterval;
+  private zmq;
+  private syscoin;
 
   private zdagStatusChangeSubject: Subject<Map<string, PendingZdagTx>> = new Subject<Map<string, PendingZdagTx>>();
   public zadgStatusChange$: Observable<Map<string, PendingZdagTx>> = this.zdagStatusChangeSubject.asObservable();
 
-  constructor(private zmq: ZmqSocketService) {
+  constructor(props: ZdagConstructorProps) {
+    this.zmq = new ZMQSocket(props.zmq.url);
+
+    const syscoin = new SyscoinRpcClient(props.rpc);
+    this.syscoin = rpcServices(syscoin.callRpc);
+
     console.log('Zdag status service init');
+
     this.subscriptions.push(this.zmq.newTx$.subscribe(txs => {
       let tx = txs[0];
       if (tx.confirmations === 0 && tx.systx && tx.systx.txtype === 'assetallocationsend') {
@@ -38,7 +43,7 @@ export class ZdagStatusService implements OnDestroy {
     let zdagTx = {
       txid: tx.txid,
       address: stx.sender,
-      zdag_status: (await rpc().assetAllocationSenderStatus(stx.asset_guid, stx.sender, tx.txid).call()),
+      zdag_status: (await this.syscoin.assetAllocationVerifyZdag(tx.txid).call()),
       asset_guid: stx.asset_guid,
       receivers: {}
     };
@@ -58,10 +63,11 @@ export class ZdagStatusService implements OnDestroy {
 
   private async updateZdagTxs() {
     let statusChanged = false;
-    for (let [key, value] of this.pendingTxs) {
+
+    for (const [key, value] of this.pendingTxs) {
       const oldVal = { ...value };
       // TODO: batch
-      let status = await rpc().assetAllocationSenderStatus(value.asset_guid, value.address, value.txid).call();
+      let status = await this.syscoin.assetAllocationVerifyZdag(value.txid).call();
       console.log('Checking:', key, status);
 
       // update status
@@ -90,6 +96,7 @@ export class ZdagStatusService implements OnDestroy {
 
   public checkAddressZdagStatus(address: string, guid: number): number {
     // go over all the pending zdag txs and see if any are status 1, if so return 1
+    // @ts-ignore
     for (const k of this.pendingTxs.values()) {
       if (k.asset_guid === guid && k.zdag_status.status >= 1 && (k.receivers[address] || k.address === address) ) {
         return k.zdag_status.status;

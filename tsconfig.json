@@ -10,7 +10,8 @@
     "moduleResolution": "node",
     "noImplicitUseStrict": true,
     "lib": ["es6", "dom"],
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "downlevelIteration": true
   },
   "exclude": [
     "node_modules",

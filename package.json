@@ -26,7 +26,7 @@
   "homepage": "https://github.com/syscoin/syscoin-js#readme",
   "dependencies": {
     "@angular/core": "^8.2.12",
-    "@syscoin/syscoin-js": "^4.0.4",
+    "@syscoin/syscoin-js": "git+ssh://git@github.com/syscoin/syscoin-js.git",
     "@types/node": "^12.0.1",
     "axios": "^0.19.0",
     "rxjs": "^6.5.3",

@@ -1,5 +1,17 @@
-export * from './ZdagStatus.service';
-export * from './ZmqSocket.service';
+export * from './zdagStatus';
+export * from './zmqSocket';
+
+export interface ZdagConstructorProps {
+  rpc: {
+    host: string
+    rpcPort: number
+    username: string
+    password: string
+  };
+  zmq: {
+    url: string
+  }
+}
 
 export interface BlockCounts {
   sysTotal: number;

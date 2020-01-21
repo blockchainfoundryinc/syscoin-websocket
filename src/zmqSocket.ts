@@ -1,14 +1,11 @@
-import { Injectable } from '@angular/core';
-import { BlockCounts, GethStatus, NetworkStatus, WalletStatus } from './index';
+import { GethStatus, NetworkStatus, WalletStatus } from './index';
 import * as SockJS from 'sockjs-client';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { TransactionListEntry } from '@syscoin/syscoin-js';
 
-
-@Injectable()
-export class ZmqSocketService {
+export class ZMQSocket {
   private socket: WebSocket;
-  private config: any = window['config'];
+  private config;
 
   private newBlockSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
   public newBlock$: Observable<string> = this.newBlockSubject.asObservable();
@@ -37,7 +34,10 @@ export class ZmqSocketService {
     'walletstatus': true,
     'walletrawtx': true};
 
-  constructor() {
+  constructor(zmqUrl: string) {
+    this.config = {
+        zmq_socket_url: zmqUrl
+    };
     this.connect();
   }
 
@@ -86,8 +86,8 @@ export class ZmqSocketService {
     }
   };
 
-  private handleDisconnect = () => {
-    console.log('zmq disconnected');
+  private handleDisconnect = (err) => {
+    console.log('zmq disconnected', err);
     this.socketStatusSubject.next(false);
 
     clearInterval(this.reconnectInterval);

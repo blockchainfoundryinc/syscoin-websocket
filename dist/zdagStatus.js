@@ -98,7 +98,7 @@ var Zdag = /** @class */ (function () {
             }
         }));
     }
-    Zdag.prototype.ngOnDestroy = function () {
+    Zdag.prototype.destroy = function () {
         this.subscriptions.forEach(function (subscription) {
             subscription.unsubscribe();
         });
@@ -213,6 +213,25 @@ var Zdag = /** @class */ (function () {
             finally { if (e_2) throw e_2.error; }
         }
         return 0;
+    };
+    Zdag.prototype.isTxZdagConfirmed = function (txid) {
+        var e_3, _a;
+        try {
+            for (var _b = __values(this.pendingTxs), _c = _b.next(); !_c.done; _c = _b.next()) {
+                var _d = __read(_c.value, 2), key = _d[0], value = _d[1];
+                if (value.txid === txid) {
+                    return value.zdag_status.status === 0;
+                }
+            }
+        }
+        catch (e_3_1) { e_3 = { error: e_3_1 }; }
+        finally {
+            try {
+                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+            }
+            finally { if (e_3) throw e_3.error; }
+        }
+        throw new Error('Txid not found');
     };
     return Zdag;
 }());

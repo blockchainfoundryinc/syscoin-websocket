@@ -1,5 +1,6 @@
 export * from './zdagStatus';
 export * from './zmqSocket';
+export * from './zdagStatus.service';
 export interface ZdagConstructorProps {
     rpc: {
         host: string;

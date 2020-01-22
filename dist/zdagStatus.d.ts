@@ -9,9 +9,10 @@ export declare class Zdag {
     private zdagStatusChangeSubject;
     zadgStatusChange$: Observable<Map<string, PendingZdagTx>>;
     constructor(props: ZdagConstructorProps);
-    ngOnDestroy(): void;
+    destroy(): void;
     private addZdagTx;
     private updateZdagTxs;
     private removeZdagTx;
     checkAddressZdagStatus(address: string, guid: number): number;
+    isTxZdagConfirmed(txid: string): boolean;
 }

@@ -32,7 +32,7 @@ export class Zdag {
     }));
   }
 
-  ngOnDestroy() {
+  public destroy() {
     this.subscriptions.forEach((subscription: Subscription) => {
       subscription.unsubscribe();
     });
@@ -104,6 +104,16 @@ export class Zdag {
     }
 
     return 0;
+  }
+
+  public isTxZdagConfirmed(txid: string) {
+    for (const [key, value] of this.pendingTxs) {
+      if (value.txid === txid) {
+        return value.zdag_status.status === 0;
+      }
+    }
+
+    throw new Error('Txid not found');
   }
 
 }

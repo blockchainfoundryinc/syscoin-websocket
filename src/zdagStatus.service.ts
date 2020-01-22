@@ -33,7 +33,7 @@ export class ZdagStatusService implements OnDestroy {
 
   public isZdagConfirmed(tx: string) {
     try {
-      return this.zdag.isZdagConfirmed(tx);
+      return this.zdag.isTxZdagConfirmed(tx);
     } catch(err) {
       throw err;
     }

@@ -17,7 +17,7 @@ export class ZdagStatusService implements OnDestroy {
     return new Promise((resolve, reject) => {
       const interval = setInterval(() => {
         try {
-          const isConfirmed = this.zdag.isZdagConfirmed(tx);
+          const isConfirmed = this.zdag.isTxZdagConfirmed(tx);
 
           if (isConfirmed) {
             clearInterval(interval);

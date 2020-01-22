@@ -21,7 +21,7 @@ var ZdagStatusService = /** @class */ (function () {
         return new Promise(function (resolve, reject) {
             var interval = setInterval(function () {
                 try {
-                    var isConfirmed = _this.zdag.isZdagConfirmed(tx);
+                    var isConfirmed = _this.zdag.isTxZdagConfirmed(tx);
                     if (isConfirmed) {
                         clearInterval(interval);
                         return resolve(tx);

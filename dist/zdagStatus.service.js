@@ -36,7 +36,7 @@ var ZdagStatusService = /** @class */ (function () {
     };
     ZdagStatusService.prototype.isZdagConfirmed = function (tx) {
         try {
-            return this.zdag.isZdagConfirmed(tx);
+            return this.zdag.isTxZdagConfirmed(tx);
         }
         catch (err) {
             throw err;

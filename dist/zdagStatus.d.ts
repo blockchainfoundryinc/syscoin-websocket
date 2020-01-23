@@ -7,7 +7,7 @@ export declare class Zdag {
     private zmq;
     private syscoin;
     private zdagStatusChangeSubject;
-    zadgStatusChange$: Observable<Map<string, PendingZdagTx>>;
+    zdagStatusChange$: Observable<Map<string, PendingZdagTx>>;
     constructor(props: ZdagConstructorProps);
     destroy(): void;
     private addZdagTx;

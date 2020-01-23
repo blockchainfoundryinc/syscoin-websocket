@@ -1,34 +1,26 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { Zdag, ZdagConstructorProps } from '.';
+import { Inject, Injectable, InjectionToken, OnDestroy, Optional } from '@angular/core';
+import { PendingZdagTx, Zdag, ZdagConstructorProps } from '.';
+import { Observable } from "rxjs";
+
+export const ZMQ_URL = new InjectionToken('TEST');
 
 @Injectable()
 export class ZdagStatusService implements OnDestroy {
   private zdag: any;
+  public zmqUrl;
+
+  constructor(@Inject('zmq_url') zmqUrl: string) {
+    console.log('init zdag lib:', zmqUrl);
+    this.initialize({ zmq: { url: zmqUrl } });
+  }
 
   initialize(config: ZdagConstructorProps) {
-    this.zdag = new Zdag(config);
+    this.zmqUrl = config.zmq.url;
+    // this.zdag = new Zdag(config); disabled for now, needs to be refactored to use remote endpoints not local RPC
   }
 
   ngOnDestroy() {
     this.zdag.destroy();
-  }
-
-  public listenToZdagConfirmed(tx: string) {
-    return new Promise((resolve, reject) => {
-      const interval = setInterval(() => {
-        try {
-          const isConfirmed = this.zdag.isTxZdagConfirmed(tx);
-
-          if (isConfirmed) {
-            clearInterval(interval);
-            return resolve(tx);
-          }
-        } catch(err) {
-          clearInterval(interval);
-          return reject(err);
-        }
-      }, 1000);
-    });
   }
 
   public isZdagConfirmed(tx: string) {
@@ -37,5 +29,9 @@ export class ZdagStatusService implements OnDestroy {
     } catch(err) {
       throw err;
     }
+  }
+
+  public statusChange(): Observable<Map<string, PendingZdagTx>> {
+    return this.zdag.zdagStatusChange$;
   }
 }

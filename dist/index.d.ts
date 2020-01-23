@@ -2,13 +2,13 @@ export * from './zdagStatus';
 export * from './zmqSocket';
 export * from './zdagStatus.service';
 export interface ZdagConstructorProps {
-    rpc: {
+    rpc?: {
         host: string;
         rpcPort: number;
         username: string;
         password: string;
     };
-    zmq: {
+    zmq?: {
         url: string;
     };
 }

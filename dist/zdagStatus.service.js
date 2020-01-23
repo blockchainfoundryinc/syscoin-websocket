@@ -4,35 +4,23 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var _1 = require(".");
+exports.ZMQ_URL = new core_1.InjectionToken('TEST');
 var ZdagStatusService = /** @class */ (function () {
-    function ZdagStatusService() {
+    function ZdagStatusService(zmqUrl) {
+        console.log('init zdag lib:', zmqUrl);
+        this.initialize({ zmq: { url: zmqUrl } });
     }
     ZdagStatusService.prototype.initialize = function (config) {
-        this.zdag = new _1.Zdag(config);
+        this.zmqUrl = config.zmq.url;
+        // this.zdag = new Zdag(config); disabled for now, needs to be refactored to use remote endpoints not local RPC
     };
     ZdagStatusService.prototype.ngOnDestroy = function () {
         this.zdag.destroy();
-    };
-    ZdagStatusService.prototype.listenToZdagConfirmed = function (tx) {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
-            var interval = setInterval(function () {
-                try {
-                    var isConfirmed = _this.zdag.isTxZdagConfirmed(tx);
-                    if (isConfirmed) {
-                        clearInterval(interval);
-                        return resolve(tx);
-                    }
-                }
-                catch (err) {
-                    clearInterval(interval);
-                    return reject(err);
-                }
-            }, 1000);
-        });
     };
     ZdagStatusService.prototype.isZdagConfirmed = function (tx) {
         try {
@@ -42,8 +30,12 @@ var ZdagStatusService = /** @class */ (function () {
             throw err;
         }
     };
+    ZdagStatusService.prototype.statusChange = function () {
+        return this.zdag.zdagStatusChange$;
+    };
     ZdagStatusService = __decorate([
-        core_1.Injectable()
+        core_1.Injectable(),
+        __param(0, core_1.Inject('zmq_url'))
     ], ZdagStatusService);
     return ZdagStatusService;
 }());

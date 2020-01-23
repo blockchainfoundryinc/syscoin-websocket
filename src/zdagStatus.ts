@@ -11,7 +11,7 @@ export class Zdag {
   private syscoin;
 
   private zdagStatusChangeSubject: Subject<Map<string, PendingZdagTx>> = new Subject<Map<string, PendingZdagTx>>();
-  public zadgStatusChange$: Observable<Map<string, PendingZdagTx>> = this.zdagStatusChangeSubject.asObservable();
+  public zdagStatusChange$: Observable<Map<string, PendingZdagTx>> = this.zdagStatusChangeSubject.asObservable();
 
   constructor(props: ZdagConstructorProps) {
     this.zmq = new ZMQSocket(props.zmq.url);

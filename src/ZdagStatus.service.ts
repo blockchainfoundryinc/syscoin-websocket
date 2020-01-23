@@ -1,8 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { ZmqSocketService } from './ZmqSocket.service';
 import { SysTxAssetAllocationSend, TransactionListEntry } from '@syscoin/syscoin-js';
 import { PendingZdagTx } from './index';
+import { BlockExplorerApiService } from "./BlockExplorerApi.service";
 
 
 @Injectable()
@@ -14,7 +15,8 @@ export class ZdagStatusService implements OnDestroy {
   private zdagStatusChangeSubject: Subject<Map<string, PendingZdagTx>> = new Subject<Map<string, PendingZdagTx>>();
   public zadgStatusChange$: Observable<Map<string, PendingZdagTx>> = this.zdagStatusChangeSubject.asObservable();
 
-  constructor(private zmq: ZmqSocketService) {
+  // TODO: how do we make this work w ng injection OR standalone/non ng
+  constructor(private zmq: ZmqSocketService, private blockExplorerApi: BlockExplorerApiService) {
     console.log('Zdag status service init');
     this.subscriptions.push(this.zmq.newTx$.subscribe(txs => {
       let tx = txs[0];
@@ -38,14 +40,9 @@ export class ZdagStatusService implements OnDestroy {
     let zdagTx = {
       txid: tx.txid,
       address: stx.sender,
-      zdag_status: (await rpc().assetAllocationSenderStatus(stx.asset_guid, stx.sender, tx.txid).call()),
-      asset_guid: stx.asset_guid,
-      receivers: {}
+      zdag_status: await this.blockExplorerApi.assetAllocationSenderStatus(stx.asset_guid, tx.txid),
+      asset_guid: stx.asset_guid
     };
-
-    stx.allocations.forEach(allocation => {
-      zdagTx.receivers[allocation.address] = true;
-    });
 
     this.pendingTxs.set(tx.txid, zdagTx);
 
@@ -58,12 +55,15 @@ export class ZdagStatusService implements OnDestroy {
 
   private async updateZdagTxs() {
     let statusChanged = false;
+    let batchData = [];
     for (let [key, value] of this.pendingTxs) {
-      const oldVal = { ...value };
-      // TODO: batch
-      let status = await rpc().assetAllocationSenderStatus(value.asset_guid, value.address, value.txid).call();
-      console.log('Checking:', key, status);
+      let request = batchData.push(this.blockExplorerApi.getDataObject('assetallocationsenderstatus', [value.asset_guid, value.txid]));
+    }
 
+    let result = await this.blockExplorerApi.assetAllocationSenderStatusBatch(batchData);
+
+    // TODO: get type info for response
+    for (let entry of result) {
       // update status
       value.zdag_status = status;
 
@@ -91,12 +91,10 @@ export class ZdagStatusService implements OnDestroy {
   public checkAddressZdagStatus(address: string, guid: number): number {
     // go over all the pending zdag txs and see if any are status 1, if so return 1
     for (const k of this.pendingTxs.values()) {
-      if (k.asset_guid === guid && k.zdag_status.status >= 1 && (k.receivers[address] || k.address === address) ) {
+      if (k.asset_guid === guid && k.zdag_status.status >= 1 && k.address === address) {
         return k.zdag_status.status;
       }
     }
-
     return 0;
   }
-
 }

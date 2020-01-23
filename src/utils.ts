@@ -1,18 +1,9 @@
 import axios, { AxiosInstance } from 'axios';
 
-export const callHttp = async (url, unwrap = true) => {
-  axios({
-    method: 'post',
-    url: '/user/12345',
-    data: {
-      firstName: 'Fred',
-      lastName: 'Flintstone'
-    }
-  });
-
+export const callHttp = async (url, method: 'get' | 'post' = 'get', data, unwrap = true) => {
   let responseFromRpc;
   try {
-    responseFromRpc = await instance.post(url, {...this});
+    responseFromRpc = await axios({ method, url, data });
     if (unwrap) {
       return getStandardResponseFromRpcResponse(responseFromRpc.data);
     } else {
@@ -34,4 +25,4 @@ export const callHttp = async (url, unwrap = true) => {
 
 export const getStandardResponseFromRpcResponse = (response) => {
   return response.result ? response.result : response;
-}
+};

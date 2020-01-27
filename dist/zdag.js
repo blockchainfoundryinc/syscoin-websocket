@@ -1,19 +1,27 @@
 Object.defineProperty(exports, "__esModule", { value: true });
-var socket_io_client_1 = require("socket.io-client");
+var io = require("socket.io-client");
+var rxjs_1 = require("rxjs");
 var Zdag = /** @class */ (function () {
     function Zdag(props) {
-        this.socket = socket_io_client_1.default.connect(props.url);
+        var _this = this;
+        this.socket = io(props.url, {
+            transports: ['websocket'],
+            query: "address=" + props.address
+        });
         this.address = props.address;
+        this.txSubject$ = new rxjs_1.Subject();
+        this.socket.on(props.address, function (data) {
+            if (data.message.hasOwnProperty('status')) {
+                data.zdagTx = true;
+            }
+            else {
+                data.zdagTx = false;
+            }
+            _this.txSubject$.next(data);
+        });
     }
     Zdag.prototype.destroy = function () {
         this.socket.close();
-    };
-    Zdag.prototype.onZdagConfirm = function (fn) {
-        this.socket.on(this.address, function (data) {
-            if (data.message && data.message.status === 0) {
-                fn(data.message);
-            }
-        });
     };
     return Zdag;
 }());

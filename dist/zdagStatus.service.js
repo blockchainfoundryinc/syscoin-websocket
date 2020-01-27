@@ -10,21 +10,14 @@ var _1 = require(".");
 var ZdagStatusService = /** @class */ (function () {
     function ZdagStatusService() {
     }
-    ZdagStatusService.prototype.initialize = function (config) {
-        this.zdag = new _1.Zdag(config);
-    };
     ZdagStatusService.prototype.ngOnDestroy = function () {
         this.zdag.destroy();
     };
-    ZdagStatusService.prototype.listenToZdagConfirmed = function (tx) {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
-            _this.zdag.onZdagConfirm(function (data) {
-                if (data.tx.txid === tx) {
-                    return resolve(data);
-                }
-            });
-        });
+    ZdagStatusService.prototype.initialize = function (config) {
+        this.zdag = new _1.Zdag(config);
+    };
+    ZdagStatusService.prototype.asObservable = function () {
+        return this.zdag.txSubject$;
     };
     ZdagStatusService = __decorate([
         core_1.Injectable()

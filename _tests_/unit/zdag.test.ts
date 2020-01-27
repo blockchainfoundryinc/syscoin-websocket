@@ -14,8 +14,8 @@ describe('Zdag class tests', () => {
     app.listen(80);
   });
 
-  afterAll(() => {
-    app.httpServer.close();
+  afterAll((done) => {
+    app.close(done);
   })
 
   it('should create a Zdag instance', () => {
@@ -97,7 +97,6 @@ describe('Zdag class tests', () => {
     let timesFired = 0;
 
     zdag.txSubject$.subscribe((data) => {
-      console.log('whatsup')
       timesFired += 1;
     });
 
@@ -110,7 +109,7 @@ describe('Zdag class tests', () => {
 
     setTimeout(() => {
       zdag.destroy();
-      
+
       io.emit(conf.address, {
         message: {}
       });

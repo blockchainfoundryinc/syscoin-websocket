@@ -15,27 +15,12 @@ export class ZdagStatusService implements OnDestroy {
 
   public listenToZdagConfirmed(tx: string) {
     return new Promise((resolve, reject) => {
-      const interval = setInterval(() => {
-        try {
-          const isConfirmed = this.zdag.isTxZdagConfirmed(tx);
-
-          if (isConfirmed) {
-            clearInterval(interval);
-            return resolve(tx);
-          }
-        } catch(err) {
-          clearInterval(interval);
-          return reject(err);
+      this.zdag.onZdagConfirm(data => {
+        if (data.tx.txid === tx) {
+          return resolve(data)
         }
-      }, 1000);
+      })
     });
   }
 
-  public isZdagConfirmed(tx: string) {
-    try {
-      return this.zdag.isTxZdagConfirmed(tx);
-    } catch(err) {
-      throw err;
-    }
-  }
 }

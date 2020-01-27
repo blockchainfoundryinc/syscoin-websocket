@@ -5,7 +5,7 @@ import { ZdagConstructorProps } from './index';
 export class Zdag {
   private address: string;
   private socket: any;
-  public txSubject$: Subject<Array<any>>;
+  public txSubject$: Subject<any> = new Subject();
 
   constructor(props: ZdagConstructorProps) {
     this.socket = io(props.url, {

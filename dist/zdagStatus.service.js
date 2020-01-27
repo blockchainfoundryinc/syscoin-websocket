@@ -19,28 +19,12 @@ var ZdagStatusService = /** @class */ (function () {
     ZdagStatusService.prototype.listenToZdagConfirmed = function (tx) {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            var interval = setInterval(function () {
-                try {
-                    var isConfirmed = _this.zdag.isTxZdagConfirmed(tx);
-                    if (isConfirmed) {
-                        clearInterval(interval);
-                        return resolve(tx);
-                    }
+            _this.zdag.onZdagConfirm(function (data) {
+                if (data.tx.txid === tx) {
+                    return resolve(data);
                 }
-                catch (err) {
-                    clearInterval(interval);
-                    return reject(err);
-                }
-            }, 1000);
+            });
         });
-    };
-    ZdagStatusService.prototype.isZdagConfirmed = function (tx) {
-        try {
-            return this.zdag.isTxZdagConfirmed(tx);
-        }
-        catch (err) {
-            throw err;
-        }
     };
     ZdagStatusService = __decorate([
         core_1.Injectable()

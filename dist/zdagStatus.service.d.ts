@@ -5,5 +5,4 @@ export declare class ZdagStatusService implements OnDestroy {
     initialize(config: ZdagConstructorProps): void;
     ngOnDestroy(): void;
     listenToZdagConfirmed(tx: string): Promise<unknown>;
-    isZdagConfirmed(tx: string): any;
 }

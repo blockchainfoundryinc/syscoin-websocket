@@ -15,7 +15,8 @@ describe('Service: ZdagStatus', () => {
     TestBed.configureTestingModule({
       providers: [
         ZdagService,
-        { provide: 'zmq_url', useValue: 'url'}
+        { provide: 'zmq_url', useValue: 'url'},
+        { provide: 'sys_address', useValue: '123'},
       ]
     });
   });
@@ -23,5 +24,6 @@ describe('Service: ZdagStatus', () => {
   it('zmqUrl should be injected by angular DI', () => {
     service = TestBed.get(ZdagService);
     expect(service.zmqUrl).toEqual('url');
+    expect(service.sysAddress).toEqual('123');
   });
 });

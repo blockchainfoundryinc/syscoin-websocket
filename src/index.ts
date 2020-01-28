@@ -43,5 +43,9 @@ export interface PendingZdagTx {
   asset_guid: number;
   zdag_status: { status: number };
   address: string;
-  receivers: { [ key: string ]: boolean };
+  receivers?: { [ key: string ]: boolean };
+}
+
+export interface RpcDataObject {
+
 }

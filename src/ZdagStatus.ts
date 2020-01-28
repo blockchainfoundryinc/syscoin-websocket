@@ -2,6 +2,12 @@ import { Observable, Subject, Subscription } from 'rxjs';
 import { ZMQSocket } from './zmqSocket';
 import { SysTxAssetAllocationSend, TransactionListEntry, SyscoinRpcClient, rpcServices } from '@syscoin/syscoin-js';
 import { PendingZdagTx, ZdagConstructorProps } from './index';
+import { Injectable, OnDestroy } from '@angular/core';
+import { Observable, Subject, Subscription } from 'rxjs';
+import { ZmqSocketService } from './ZmqSocket.service';
+import { SysTxAssetAllocationSend, TransactionListEntry } from '@syscoin/syscoin-js';
+import { PendingZdagTx } from './index';
+import { BlockExplorerApiService } from "./BlockExplorerApi.service";
 
 export class Zdag {
   private pendingTxs: Map<string, PendingZdagTx> = new Map<string, PendingZdagTx>();
@@ -43,14 +49,9 @@ export class Zdag {
     let zdagTx = {
       txid: tx.txid,
       address: stx.sender,
-      zdag_status: (await this.syscoin.assetAllocationVerifyZdag(tx.txid).call()),
-      asset_guid: stx.asset_guid,
-      receivers: {}
+      zdag_status: await this.blockExplorerApi.assetAllocationSenderStatus(stx.asset_guid, tx.txid),
+      asset_guid: stx.asset_guid
     };
-
-    stx.allocations.forEach(allocation => {
-      zdagTx.receivers[allocation.address] = true;
-    });
 
     this.pendingTxs.set(tx.txid, zdagTx);
 
@@ -63,13 +64,15 @@ export class Zdag {
 
   private async updateZdagTxs() {
     let statusChanged = false;
+    let batchData = [];
+    for (let [key, value] of this.pendingTxs) {
+      let request = batchData.push(this.blockExplorerApi.getDataObject('assetallocationsenderstatus', [value.asset_guid, value.txid]));
+    }
 
-    for (const [key, value] of this.pendingTxs) {
-      const oldVal = { ...value };
-      // TODO: batch
-      let status = await this.syscoin.assetAllocationVerifyZdag(value.txid).call();
-      console.log('Checking:', key, status);
+    let result = await this.blockExplorerApi.assetAllocationSenderStatusBatch(batchData);
 
+    // TODO: get type info for response
+    for (let entry of result) {
       // update status
       value.zdag_status = status;
 
@@ -98,11 +101,10 @@ export class Zdag {
     // go over all the pending zdag txs and see if any are status 1, if so return 1
     // @ts-ignore
     for (const k of this.pendingTxs.values()) {
-      if (k.asset_guid === guid && k.zdag_status.status >= 1 && (k.receivers[address] || k.address === address) ) {
+      if (k.asset_guid === guid && k.zdag_status.status >= 1 && k.address === address) {
         return k.zdag_status.status;
       }
     }
-
     return 0;
   }
 

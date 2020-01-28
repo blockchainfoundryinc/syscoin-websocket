@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 export const ZMQ_URL = new InjectionToken('TEST');
 
 @Injectable()
-export class ZdagStatusService implements OnDestroy {
+export class ZdagService implements OnDestroy {
   private zdag: any;
   public zmqUrl;
 

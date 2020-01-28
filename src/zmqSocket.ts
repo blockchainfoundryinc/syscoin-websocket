@@ -98,6 +98,4 @@ export class ZMQSocket {
     console.log('simulate ready');
     this.walletStatusSubject.next({ status: 'ready', name: ''});
   }
-
-
 }

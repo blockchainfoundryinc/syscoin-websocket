@@ -1,13 +1,18 @@
-import { InjectionToken, OnDestroy } from '@angular/core';
-import { PendingZdagTx, ZdagConstructorProps } from '.';
-import { Observable } from "rxjs";
-export declare const ZMQ_URL: InjectionToken<unknown>;
+import { OnDestroy } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ZmqSocketService } from './ZmqSocket.service';
+import { PendingZdagTx } from './index';
 export declare class ZdagStatusService implements OnDestroy {
-    private zdag;
-    zmqUrl: any;
-    constructor(zmqUrl: string);
-    initialize(config: ZdagConstructorProps): void;
+    private zmq;
+    private pendingTxs;
+    private subscriptions;
+    private updateZdagInterval;
+    private zdagStatusChangeSubject;
+    zadgStatusChange$: Observable<Map<string, PendingZdagTx>>;
+    constructor(zmq: ZmqSocketService);
     ngOnDestroy(): void;
-    isZdagConfirmed(tx: string): any;
-    statusChange(): Observable<Map<string, PendingZdagTx>>;
+    private addZdagTx;
+    private updateZdagTxs;
+    private removeZdagTx;
+    checkAddressZdagStatus(address: string, guid: number): number;
 }

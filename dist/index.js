@@ -3,4 +3,4 @@ function __export(m) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./zdag"));
-__export(require("./zdagStatus.service"));
+__export(require("./Zdag.service"));

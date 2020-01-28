@@ -1,5 +1,5 @@
 export * from './zdag';
-export * from './zdagStatus.service';
+export * from './Zdag.service';
 
 export interface ZdagConstructorProps {
   url: string,

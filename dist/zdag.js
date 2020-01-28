@@ -4,6 +4,7 @@ var rxjs_1 = require("rxjs");
 var Zdag = /** @class */ (function () {
     function Zdag(props) {
         var _this = this;
+        this.txSubject$ = new rxjs_1.Subject();
         this.socket = io(props.url, {
             transports: ['websocket'],
             query: "address=" + props.address

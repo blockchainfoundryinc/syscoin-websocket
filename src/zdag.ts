@@ -16,7 +16,7 @@ export class Zdag {
     this.txSubject$ = new Subject();
 
     this.socket.on(props.address, (data) => {
-      if (data.message.hasOwnProperty('status')) {
+      if (data.message && data.message.hasOwnProperty('status')) {
         data.zdagTx = true;
       } else {
         data.zdagTx = false

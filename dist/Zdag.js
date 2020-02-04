@@ -12,7 +12,7 @@ var Zdag = /** @class */ (function () {
         this.address = props.address;
         this.txSubject$ = new rxjs_1.Subject();
         this.socket.on(props.address, function (data) {
-            if (data.message.hasOwnProperty('status')) {
+            if (data.message && data.message.hasOwnProperty('status')) {
                 data.zdagTx = true;
             }
             else {

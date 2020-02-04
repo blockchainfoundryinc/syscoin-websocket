@@ -1,1 +1,1 @@
-# zdag-js
+# Syscoin Websocket Client

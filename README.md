@@ -1,5 +1,5 @@
 # Syscoin Websocket  Client
-Client library for syscoin-websocket. This library exposes an observable for easy access to message events and an Angular X service wrapper.
+Client library for [syscoin-websocket](https://github.com/blockchainfoundryinc/syscoin-websocket). This library exposes an observable for easy access to message events and an Angular X service wrapper.
 
 Installation
 ------------

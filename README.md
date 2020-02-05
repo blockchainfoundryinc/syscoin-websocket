@@ -14,28 +14,30 @@ The client can be used as standalone TS/JS or via an Angular X service wrapper.
 
 ### Standard TS/JS
 ```
-import { Zdag } from 'syscoin-websocket-client';
+import { SyscoinWebsocket } from 'syscoin-websocket-client';
 const conf = {
   url: 'http://localhost',
   address: 'sys1qqtsqzjr602nwtaxztwake69s7p8x7kp4m8twvf'
 }
-const zdag = new Zdag(zdagExampleConf);
-zdag.txSubject$.subscribe((msg) => { ... });
+const socket = new SyscoinWebsocket(conf);
+socket.txSubject$.subscribe((msg) => { ... });
+socket.hashBlockSubject$.subscribe((msg) => { ... });
 ```
 
 ### Angular X
-Add `ZdagService`, `zmq_url`, and `sys_address` to your applications `app.module.ts`.
+Add `SyscoinWebsocketConfigService` and `SyscoinWebsocketService` to your applications `app.module.ts`.
 ```
 providers: [
-  ZdagService,
-  { provide: 'zmq_url', useValue: 'http://localhost'},
-  { provide: 'sys_address', useValue: 'sys1qqtsqzjr602nwtaxztwake69s7p8x7kp4m8twvf'},
+  SyscoinWebsocketConfigService,
+  SyscoinWebsocketService,
 ]
 ```
 
-Use `ZdagService` as a standard Angular service.
+Use as a standard Angular service. Call `SyscoinWebsocketConfigService.configure(url, syscoinAddress)` to initialize the connection.
 ```
-constructor(private zdagService: ZdagService) {
-  this.zdagService.asObservable().subscribe((msg) => { ... });
+constructor(private configService: SyscoinWebsocketConfigService, private socketService: SyscoinWebsocketService) {
+  this.configService.configure('http://localhost:9999', 'sys1qqtsqzjr602nwtaxztwake69s7p8x7kp4m8twvf');
+  this.socketService.txSubject().subscribe((msg) => { ... });
+  this.socketService.hashBlockSubject().subscribe((msg) => { ... });
 }
 ```

@@ -13,7 +13,12 @@ var SyscoinWebsocket = /** @class */ (function () {
         this.address = props.address;
         this.txSubject$ = new rxjs_1.Subject();
         this.socket.on(props.address, function (data) {
-            data.zdagTx = data.message.hasOwnProperty('status') ? true : false;
+            try {
+                data.zdagTx = data.message.hasOwnProperty('status');
+            }
+            catch (err) {
+                data.zdagTx = false;
+            }
             _this.txSubject$.next(data);
         });
         this.socket.on('hashblock', function (data) {

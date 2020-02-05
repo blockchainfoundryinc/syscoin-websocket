@@ -17,7 +17,12 @@ export class SyscoinWebsocket {
     this.txSubject$ = new Subject();
 
     this.socket.on(props.address, (data) => {
-      data.zdagTx = data.message.hasOwnProperty('status') ? true : false;
+      try {
+        data.zdagTx = data.message.hasOwnProperty('status');
+      } catch(err) {
+        data.zdagTx = false;
+      }
+
       this.txSubject$.next(data);
     });
 

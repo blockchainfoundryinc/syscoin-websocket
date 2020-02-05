@@ -1,10 +1,10 @@
 import * as socketio from 'socket.io';
-import { Zdag } from '../../src';
+import { SyscoinWebsocket } from '../../dist';
 
-describe('Zdag class tests', () => {
+describe('SyscoinWebsocket class tests', () => {
   const app = require('http').createServer();
   const io = socketio(app);
-  const zdagExampleConf = {
+  const syscoinWebsocketExampleConf = {
     url: 'http://localhost',
     address: 'test_address'
   }
@@ -19,28 +19,28 @@ describe('Zdag class tests', () => {
   })
 
   it('should create a Zdag instance', () => {
-    const zdag = new Zdag(zdagExampleConf);
+    const ws = new SyscoinWebsocket(syscoinWebsocketExampleConf);
 
-    expect(zdag).toBeInstanceOf(Zdag);
+    expect(ws).toBeInstanceOf(SyscoinWebsocket);
   });
 
   it('should subscribe to txSubject$', (done) => {
-    const zdag = new Zdag(zdagExampleConf);
+    const ws = new SyscoinWebsocket(syscoinWebsocketExampleConf);
 
-    zdag.txSubject$.subscribe((data) => {
+    ws.txSubject$.subscribe((data) => {
       expect(data.test).toEqual('test');
       done();
     });
 
-    zdag.txSubject$.next({ test: 'test' });
+    ws.txSubject$.next({ test: 'test' });
   });
 
   it('should trigger subscription when socket receives a message', (done) => {
-    const conf = {...zdagExampleConf};
+    const conf = {...syscoinWebsocketExampleConf};
     conf.address = conf.address + Math.random();
-    const zdag = new Zdag(conf);
+    const ws = new SyscoinWebsocket(conf);
 
-    zdag.txSubject$.subscribe((data) => {
+    ws.txSubject$.subscribe((data) => {
       expect(data.test).toEqual('test');
       done();
     });
@@ -52,11 +52,11 @@ describe('Zdag class tests', () => {
   });
 
   it('should add zdagTx prop if tx contains zdag status prop', (done) => {
-    const conf = {...zdagExampleConf};
+    const conf = {...syscoinWebsocketExampleConf};
     conf.address = conf.address + Math.random();
-    const zdag = new Zdag(conf);
+    const ws = new SyscoinWebsocket(conf);
 
-    zdag.txSubject$.subscribe((data) => {
+    ws.txSubject$.subscribe((data) => {
       expect(data.zdagTx).toBeTruthy();
       done();
     });
@@ -72,11 +72,11 @@ describe('Zdag class tests', () => {
   });
 
   it('should not add zdagTx prop if tx does not contain zdag status prop', (done) => {
-    const conf = {...zdagExampleConf};
+    const conf = {...syscoinWebsocketExampleConf};
     conf.address = conf.address + Math.random();
-    const zdag = new Zdag(conf);
+    const ws = new SyscoinWebsocket(conf);
 
-    zdag.txSubject$.subscribe((data) => {
+    ws.txSubject$.subscribe((data) => {
       expect(data.zdagTx).toBeFalsy();
       done();
     });
@@ -90,13 +90,13 @@ describe('Zdag class tests', () => {
   });
 
   it('should kill socket if destroy is called', (done) => {
-    const conf = {...zdagExampleConf};
+    const conf = {...syscoinWebsocketExampleConf};
     conf.address = conf.address + Math.random();
-    const zdag = new Zdag(conf);
+    const ws = new SyscoinWebsocket(conf);
 
     let timesFired = 0;
 
-    zdag.txSubject$.subscribe((data) => {
+    ws.txSubject$.subscribe((data) => {
       timesFired += 1;
     });
 
@@ -108,7 +108,7 @@ describe('Zdag class tests', () => {
     }, 200);
 
     setTimeout(() => {
-      zdag.destroy();
+      ws.destroy();
 
       io.emit(conf.address, {
         message: {}

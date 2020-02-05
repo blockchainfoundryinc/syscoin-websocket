@@ -1,7 +1,8 @@
-export * from './Zdag';
-export * from './Zdag.service';
+export * from './SyscoinWebsocketConfig.service';
+export * from './SyscoinWebsocket';
+export * from './SyscoinWebsocket.service';
 
-export interface ZdagConstructorProps {
+export interface SyscoinWebsocketConstructorProps {
   url: string,
   address: string
 }

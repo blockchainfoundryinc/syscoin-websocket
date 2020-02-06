@@ -41,3 +41,7 @@ constructor(private configService: SyscoinWebsocketConfigService, private socket
   this.socketService.hashBlockSubject().subscribe((msg) => { ... });
 }
 ```
+
+Handling Messages
+-------------
+For more information on the message data the client may receive please see [syscoin-websocket usage](https://github.com/blockchainfoundryinc/syscoin-websocket#sample-output).

@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/syscoin/syscoin-js.git"
+    "url": "https://github.com/blockchainfoundryinc/syscoin-websocket-client.git"
   },
   "keywords": [
     "syscoin",
@@ -22,9 +22,9 @@
   "author": "Blockchain Foundry",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/syscoin/syscoin-js/issues"
+    "url": "https://github.com/blockchainfoundryinc/syscoin-websocket-client/issues"
   },
-  "homepage": "https://github.com/syscoin/syscoin-js#readme",
+  "homepage": "https://github.com/blockchainfoundryinc/syscoin-websocket-client#readme",
   "dependencies": {
     "@syscoin/syscoin-js": "https://github.com/syscoin/syscoin-js.git",
     "@types/node": "^12.0.1",

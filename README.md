@@ -1,5 +1,5 @@
 # Syscoin Websocket  Client
-Client library for [syscoin-websocket](https://github.com/blockchainfoundryinc/syscoin-websocket). This library exposes an observable for easy access to message events and an Angular X service wrapper. An example server is available at (https://syscoin-websocket.blockchainfoundry.co)[http://amritb.github.io/socketio-client-tool/#url=aHR0cHM6Ly9zeXNjb2luLXdlYnNvY2tldC5ibG9ja2NoYWluZm91bmRyeS5jbw==&path=&opt=eyJxdWVyeSI6ImFkZHJlc3M9c3lzMXFxdHNxempyNjAybnd0YXh6dHdha2U2OXM3cDh4N2twNG04dHd2ZiJ9&events=sys1qqtsqzjr602nwtaxztwake69s7p8x7kp4m8twvf,hashblock].
+Client library for [syscoin-websocket](https://github.com/blockchainfoundryinc/syscoin-websocket). This library exposes an observable for easy access to message events and an Angular X service wrapper. An example server is available at [https://syscoin-websocket.blockchainfoundry.co](http://amritb.github.io/socketio-client-tool/#url=aHR0cHM6Ly9zeXNjb2luLXdlYnNvY2tldC5ibG9ja2NoYWluZm91bmRyeS5jbw==&path=&opt=eyJxdWVyeSI6ImFkZHJlc3M9c3lzMXFxdHNxempyNjAybnd0YXh6dHdha2U2OXM3cDh4N2twNG04dHd2ZiJ9&events=sys1qqtsqzjr602nwtaxztwake69s7p8x7kp4m8twvf,hashblock).
 
 Installation
 ------------

@@ -1,5 +1,5 @@
 {
-  "name": "syscoin-websocket-client",
+  "name": "syscoin-websocket",
   "version": "1.0.0",
   "description": "Javascript SDK for Syscoin ZDAG.",
   "main": "dist/",

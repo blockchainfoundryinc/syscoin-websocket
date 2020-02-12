@@ -15,7 +15,7 @@ The client can be used as standalone TS/JS or via an Angular X service wrapper.
 
 ### Standard TS/JS
 ```
-import { SyscoinWebsocket } from 'syscoin-websocket-client';
+import { SyscoinWebsocket } from 'syscoin-websocket';
 const conf = {
   url: 'http://localhost',
   address: 'sys1qqtsqzjr602nwtaxztwake69s7p8x7kp4m8twvf'

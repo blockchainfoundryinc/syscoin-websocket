@@ -1,5 +1,5 @@
 import * as io from 'socket.io-client';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { SyscoinWebsocketConstructorProps } from './index';
 
 export class SyscoinWebsocket {
@@ -7,6 +7,7 @@ export class SyscoinWebsocket {
   private socket: any;
   public txSubject$: Subject<any> = new Subject();
   public hashBlockSubject$: Subject<any> = new Subject();
+  public connectedSubject$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   constructor(props: SyscoinWebsocketConstructorProps) {
     this.socket = io(props.url, {
@@ -16,19 +17,32 @@ export class SyscoinWebsocket {
     this.address = props.address;
     this.txSubject$ = new Subject();
 
-    this.socket.on(props.address, (data) => {
-      try {
-        data.zdagTx = data.message.hasOwnProperty('status');
-      } catch(err) {
-        data.zdagTx = false;
-      }
+    this.socket.on('connect', this.handleConnect.bind(this));
+    this.socket.on('disconnect', this.handleDisconnect.bind(this));
+    this.socket.on(props.address, this.handleTxMessage.bind(this));
+    this.socket.on('hashblock', this.handleHashblockMessage.bind(this));
+  }
 
-      this.txSubject$.next(data);
-    });
+  private handleConnect() {
+    this.connectedSubject$.next(true);
+  }
 
-    this.socket.on('hashblock', (data) => {
-      this.hashBlockSubject$.next(data);
-    });
+  private handleDisconnect() {
+    this.connectedSubject$.next(false);
+  }
+
+  private handleTxMessage(data) {
+    try {
+      data.zdagTx = data.message.hasOwnProperty('status');
+    } catch(err) {
+      data.zdagTx = false;
+    }
+
+    this.txSubject$.next(data);
+  }
+
+  private handleHashblockMessage(data) {
+    this.hashBlockSubject$.next(data);
   }
 
   public destroy() {

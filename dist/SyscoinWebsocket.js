@@ -3,28 +3,38 @@ var io = require("socket.io-client");
 var rxjs_1 = require("rxjs");
 var SyscoinWebsocket = /** @class */ (function () {
     function SyscoinWebsocket(props) {
-        var _this = this;
         this.txSubject$ = new rxjs_1.Subject();
         this.hashBlockSubject$ = new rxjs_1.Subject();
+        this.connectedSubject$ = new rxjs_1.BehaviorSubject(false);
         this.socket = io(props.url, {
             transports: ['websocket'],
             query: "address=" + props.address
         });
         this.address = props.address;
         this.txSubject$ = new rxjs_1.Subject();
-        this.socket.on(props.address, function (data) {
-            try {
-                data.zdagTx = data.message.hasOwnProperty('status');
-            }
-            catch (err) {
-                data.zdagTx = false;
-            }
-            _this.txSubject$.next(data);
-        });
-        this.socket.on('hashblock', function (data) {
-            _this.hashBlockSubject$.next(data);
-        });
+        this.socket.on('connect', this.handleConnect.bind(this));
+        this.socket.on('disconnect', this.handleDisconnect.bind(this));
+        this.socket.on(props.address, this.handleTxMessage.bind(this));
+        this.socket.on('hashblock', this.handleHashblockMessage.bind(this));
     }
+    SyscoinWebsocket.prototype.handleConnect = function () {
+        this.connectedSubject$.next(true);
+    };
+    SyscoinWebsocket.prototype.handleDisconnect = function () {
+        this.connectedSubject$.next(false);
+    };
+    SyscoinWebsocket.prototype.handleTxMessage = function (data) {
+        try {
+            data.zdagTx = data.message.hasOwnProperty('status');
+        }
+        catch (err) {
+            data.zdagTx = false;
+        }
+        this.txSubject$.next(data);
+    };
+    SyscoinWebsocket.prototype.handleHashblockMessage = function (data) {
+        this.hashBlockSubject$.next(data);
+    };
     SyscoinWebsocket.prototype.destroy = function () {
         this.socket.close();
     };

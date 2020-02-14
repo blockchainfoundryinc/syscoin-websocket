@@ -9,4 +9,5 @@ export declare class SyscoinWebsocketService implements OnDestroy {
     ngOnDestroy(): void;
     txSubject(): import("rxjs").Subject<any>;
     hashBlockSubject(): import("rxjs").Subject<any>;
+    connectedSubject(): import("rxjs").BehaviorSubject<boolean>;
 }

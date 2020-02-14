@@ -31,6 +31,9 @@ var SyscoinWebsocketService = /** @class */ (function () {
     SyscoinWebsocketService.prototype.hashBlockSubject = function () {
         return this.syscoinWebsocket.hashBlockSubject$;
     };
+    SyscoinWebsocketService.prototype.connectedSubject = function () {
+        return this.syscoinWebsocket.connectedSubject$;
+    };
     SyscoinWebsocketService = __decorate([
         core_1.Injectable(),
         __metadata("design:paramtypes", [SyscoinWebsocketConfig_service_1.SyscoinWebsocketConfigService])

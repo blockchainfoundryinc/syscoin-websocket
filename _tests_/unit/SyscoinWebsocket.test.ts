@@ -24,6 +24,38 @@ describe('SyscoinWebsocket class tests', () => {
     expect(ws).toBeInstanceOf(SyscoinWebsocket);
   });
 
+  it('should indicate connected status through connectionSubject$', (done) => {
+    const ws = new SyscoinWebsocket(syscoinWebsocketExampleConf);
+
+    let numEvents = 0;
+    ws.connectedSubject$.subscribe((data) => {
+      numEvents ++;
+      if(numEvents > 1) {
+        expect(data).toEqual(true);
+        done();
+      }
+    });
+  });
+
+  it('should indicate disconnected status through connectionSubject$', (done) => {
+    const ws = new SyscoinWebsocket(syscoinWebsocketExampleConf);
+
+    let numEvents = 0;
+    ws.connectedSubject$.subscribe((data) => {
+      numEvents ++;
+      switch(numEvents) {
+        case 2:
+          ws.destroy();
+          break;
+
+        case 3:
+          expect(data).toEqual(false);
+          done();
+          break;
+      }
+    });
+  });
+
   it('should subscribe to txSubject$', (done) => {
     const ws = new SyscoinWebsocket(syscoinWebsocketExampleConf);
 

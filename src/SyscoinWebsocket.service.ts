@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { SyscoinWebsocket } from "./SyscoinWebsocket";
 import { SyscoinWebsocketConfigService } from "./SyscoinWebsocketConfig.service";
-import { SyscoinWebsocketConstructorProps } from "./index";
+import { SyscoinWebsocketConstructorProps } from "./models";
 
 @Injectable()
 export class SyscoinWebsocketService implements OnDestroy {

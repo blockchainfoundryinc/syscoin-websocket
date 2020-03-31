@@ -1,6 +1,6 @@
 import { OnDestroy } from '@angular/core';
 import { SyscoinWebsocketConfigService } from "./SyscoinWebsocketConfig.service";
-import { SyscoinWebsocketConstructorProps } from "./index";
+import { SyscoinWebsocketConstructorProps } from "./models";
 export declare class SyscoinWebsocketService implements OnDestroy {
     private configService;
     private syscoinWebsocket;

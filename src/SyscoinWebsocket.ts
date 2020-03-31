@@ -7,7 +7,7 @@ export class SyscoinWebsocket {
   private socket: any;
   public txSubject$: Subject<any> = new Subject();
   public hashBlockSubject$: Subject<any> = new Subject();
-  public connectedSubject$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  public connectedSubject$: BehaviorSubject<boolean> = new BehaviorSubject(null);
 
   constructor(props: SyscoinWebsocketConstructorProps) {
     this.socket = io(props.url, {

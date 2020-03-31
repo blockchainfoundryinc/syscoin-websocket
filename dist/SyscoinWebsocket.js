@@ -5,7 +5,7 @@ var SyscoinWebsocket = /** @class */ (function () {
     function SyscoinWebsocket(props) {
         this.txSubject$ = new rxjs_1.Subject();
         this.hashBlockSubject$ = new rxjs_1.Subject();
-        this.connectedSubject$ = new rxjs_1.BehaviorSubject(false);
+        this.connectedSubject$ = new rxjs_1.BehaviorSubject(null);
         this.socket = io(props.url, {
             transports: ['websocket'],
             query: "address=" + props.address

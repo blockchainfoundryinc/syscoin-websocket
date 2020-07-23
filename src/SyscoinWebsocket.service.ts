@@ -28,6 +28,10 @@ export class SyscoinWebsocketService implements OnDestroy {
     return this.syscoinWebsocket.hashBlockSubject$;
   }
 
+  rejectedTxsSubject() {
+    return this.syscoinWebsocket.rejectedTxsSubject$;
+  }
+
   connectedSubject() {
     return this.syscoinWebsocket.connectedSubject$;
   }

@@ -36,6 +36,10 @@ describe('Service: SyscoinWebsocket', () => {
     expect(service.hashBlockSubject()).toBeDefined()
   });
 
+  it('rejectedTxsSubject is defined after config', () => {
+    expect(service.rejectedTxsSubject()).toBeDefined()
+  });
+
   it('connectedSubject is defined after config', () => {
     expect(service.connectedSubject()).toBeDefined()
   });

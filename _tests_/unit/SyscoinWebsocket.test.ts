@@ -153,4 +153,36 @@ describe('SyscoinWebsocket class tests', () => {
     }, 400);
   });
 
+  it('should dispatch hashblockSubject$ messages when handler is called', (done) => {
+    const ws = new SyscoinWebsocket(syscoinWebsocketExampleConf);
+
+    ws.hashBlockSubject$.subscribe((data) => {
+      expect(data.message[0]).toEqual('test');
+      done();
+    });
+
+    setTimeout(() => {
+      // Give it a little time so server doesnt emit the message before subscribing
+      io.emit('hashblock', {
+        message: ['test']
+      });
+    }, 200);
+  });
+
+  it('should dispatch rejectedTxsSubject$ messages when handler is called', (done) => {
+    const ws = new SyscoinWebsocket(syscoinWebsocketExampleConf);
+
+    ws.rejectedTxsSubject$.subscribe((data) => {
+      expect(data.message[0]).toEqual('test');
+      done();
+    });
+
+    setTimeout(() => {
+      // Give it a little time so server doesnt emit the message before subscribing
+      io.emit('rejected_txs', {
+        message: ['test']
+      });
+    }, 200);
+  });
+
 });

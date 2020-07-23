@@ -31,6 +31,9 @@ var SyscoinWebsocketService = /** @class */ (function () {
     SyscoinWebsocketService.prototype.hashBlockSubject = function () {
         return this.syscoinWebsocket.hashBlockSubject$;
     };
+    SyscoinWebsocketService.prototype.rejectedTxsSubject = function () {
+        return this.syscoinWebsocket.rejectedTxsSubject$;
+    };
     SyscoinWebsocketService.prototype.connectedSubject = function () {
         return this.syscoinWebsocket.connectedSubject$;
     };

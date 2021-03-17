@@ -11,7 +11,18 @@ npm i -s http://www.github.com/blockchainfoundryinc/syscoin-websocket
 
 Usage
 -------------
-The client can be used as standalone TS/JS or via an Angular X service wrapper.
+The client can be used as standalone TS/JS or via an Angular X service wrapper. 
+Because the test suite exercises both standalone and Angular X services, you will need 
+to install the Angular dependencies for both building and running the test suite. `npm-install-peers` is 
+included as a dev-dependency to simplify this process. To fully install, build and 
+test from source:
+
+```
+cd syscoin-websocket
+npm i
+npm-install-peers
+npm run build-test
+```
 
 ### Standard TS/JS
 ```

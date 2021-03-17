@@ -7,6 +7,7 @@ export class SyscoinWebsocket {
   private socket: any;
   public txSubject$: Subject<any> = new Subject();
   public hashBlockSubject$: Subject<any> = new Subject();
+  public rejectedTxsSubject$: Subject<any> = new Subject();
   public connectedSubject$: BehaviorSubject<boolean> = new BehaviorSubject(null);
 
   constructor(props: SyscoinWebsocketConstructorProps) {
@@ -21,6 +22,7 @@ export class SyscoinWebsocket {
     this.socket.on('disconnect', this.handleDisconnect.bind(this));
     this.socket.on(props.address, this.handleTxMessage.bind(this));
     this.socket.on('hashblock', this.handleHashblockMessage.bind(this));
+    this.socket.on('rejected_txs', this.handleRejectedTxsMessage.bind(this));
   }
 
   private handleConnect() {
@@ -43,6 +45,10 @@ export class SyscoinWebsocket {
 
   private handleHashblockMessage(data) {
     this.hashBlockSubject$.next(data);
+  }
+
+  private handleRejectedTxsMessage(data) {
+    this.rejectedTxsSubject$.next(data);
   }
 
   public destroy() {

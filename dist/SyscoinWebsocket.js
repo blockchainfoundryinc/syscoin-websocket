@@ -5,6 +5,7 @@ var SyscoinWebsocket = /** @class */ (function () {
     function SyscoinWebsocket(props) {
         this.txSubject$ = new rxjs_1.Subject();
         this.hashBlockSubject$ = new rxjs_1.Subject();
+        this.rejectedTxsSubject$ = new rxjs_1.Subject();
         this.connectedSubject$ = new rxjs_1.BehaviorSubject(null);
         this.socket = io(props.url, {
             transports: ['websocket'],
@@ -16,6 +17,7 @@ var SyscoinWebsocket = /** @class */ (function () {
         this.socket.on('disconnect', this.handleDisconnect.bind(this));
         this.socket.on(props.address, this.handleTxMessage.bind(this));
         this.socket.on('hashblock', this.handleHashblockMessage.bind(this));
+        this.socket.on('rejected_txs', this.handleRejectedTxsMessage.bind(this));
     }
     SyscoinWebsocket.prototype.handleConnect = function () {
         this.connectedSubject$.next(true);
@@ -34,6 +36,9 @@ var SyscoinWebsocket = /** @class */ (function () {
     };
     SyscoinWebsocket.prototype.handleHashblockMessage = function (data) {
         this.hashBlockSubject$.next(data);
+    };
+    SyscoinWebsocket.prototype.handleRejectedTxsMessage = function (data) {
+        this.rejectedTxsSubject$.next(data);
     };
     SyscoinWebsocket.prototype.destroy = function () {
         this.socket.close();

@@ -3,7 +3,7 @@ Client library for [syscoin-websocket-server](https://github.com/blockchainfound
 
 Installation
 ------------
-Recommended node version: 12.x or higher.
+Recommended node version: 10.18.1 or higher.
 ```
 npm i -s http://www.github.com/blockchainfoundryinc/syscoin-websocket
 ```

@@ -50,5 +50,8 @@
     "axios": ">=0.18.1",
     "@angular/core": "^8.2.14",
     "@angular/platform-browser-dynamic": "^8.2.14"
-  }
+  },
+  "engines": {
+    "node": ">=10.18.1"
+  },
 }

@@ -26,6 +26,15 @@ var SyscoinWebsocket = /** @class */ (function () {
         this.connectedSubject$.next(false);
     };
     SyscoinWebsocket.prototype.handleTxMessage = function (data) {
+        if (typeof data === 'string') {
+            try {
+                data = JSON.parse(data);
+            }
+            catch (err) {
+                // Not an object, return to prevent crashing
+                return;
+            }
+        }
         try {
             data.zdagTx = data.message.hasOwnProperty('status');
         }

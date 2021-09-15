@@ -34,6 +34,15 @@ export class SyscoinWebsocket {
   }
 
   private handleTxMessage(data) {
+    if (typeof data === 'string') {
+      try {
+        data = JSON.parse(data);
+      } catch(err) {
+        // Not an object, return to prevent crashing
+        return;
+      }
+    }
+
     try {
       data.zdagTx = data.message.hasOwnProperty('status');
     } catch(err) {
